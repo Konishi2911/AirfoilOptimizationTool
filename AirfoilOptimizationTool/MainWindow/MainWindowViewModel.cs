@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,6 +16,8 @@ namespace AirfoilOptimizationTool
     public class MainWindowViewModel: ViewModelBase
     {
         private const int airfoilPreviewResolutions = 100;
+        private const int numberOfParentPreviewWindows = 10;
+        private const int numberOfCandidatePreviewWindows = 10;
 
         private Airfoil.Airfoil[] _currentPopulation;
         private Airfoil.Airfoil[] _candidates;
@@ -22,7 +26,28 @@ namespace AirfoilOptimizationTool
         private PointCollection[] _drawingCurrentPopulationCurves;
         private PointCollection[] _drawingCandidateCurves;
 
-        private Size[] _canvasSize;
+        private ObservableCollection<Size> _parentCanvasSize;
+        private ObservableCollection<Size> _candidateCanvasSize;
+
+        // Constructor
+        public MainWindowViewModel() {
+            // Instantiate ObservableCollections
+            _parentCanvasSize = new ObservableCollection<Size>(new Size[numberOfParentPreviewWindows]);
+            _candidateCanvasSize = new ObservableCollection<Size>(new Size[numberOfCandidatePreviewWindows]);
+
+            // Register Evnet handlers
+            _parentCanvasSize.CollectionChanged += canvasSizeDidChange;
+            _candidateCanvasSize.CollectionChanged += canvasSizeDidChange;
+            
+            // Generate Mock for debugging
+            _currentPopulationCurves = new Point[numberOfParentPreviewWindows][];
+            _currentPopulationCurves[0] = new Point[] {
+                new Point(10, 0),
+                new Point(0, 0)
+            };
+
+            updateAirfoilPreviews();
+        }
 
         #region Properties and Setters
         //
@@ -55,25 +80,34 @@ namespace AirfoilOptimizationTool
         //
         // Binding Properties
         //
-        public PointCollection[] drawingCurrentPopulationCurves {
+        public PointCollection[] drawingCurrentPopulationCurve {
             get => _drawingCurrentPopulationCurves;
             private set {
                 _drawingCurrentPopulationCurves = value;
-                notifyPropertyDidChange(nameof(drawingCurrentPopulationCurves));
+                notifyPropertyDidChange(nameof(drawingCurrentPopulationCurve));
             }
         }
-        public PointCollection[] drawingCandidateCurves {
+        public PointCollection[] drawingCandidatesCurve {
             get => _drawingCandidateCurves;
             private set {
                 _drawingCandidateCurves = value;
-                notifyPropertyDidChange(nameof(drawingCandidateCurves));
+                notifyPropertyDidChange(nameof(drawingCandidatesCurve));
             }
         }
-        public Size[] canvasSize {
-            get => _canvasSize;
-            set {
-                _canvasSize = value;
-            }
+        public ObservableCollection<Size> parentCanvasSizes {
+            get => _parentCanvasSize;
+        }
+        public ObservableCollection<Size> candidateCanvasSizes {
+            get => _candidateCanvasSize;
+        }
+
+        // Callbacks
+
+        //
+        // Canvas size was changed
+        //
+        private void canvasSizeDidChange(object sender, NotifyCollectionChangedEventArgs e) {
+            updateAirfoilPreviews();
         }
 
         //
@@ -82,28 +116,32 @@ namespace AirfoilOptimizationTool
         private void updateAirfoilPreviews() {
             List<PointCollection> temp_p = new List<PointCollection>();
             for (var i = 0; i < currentPopulationCurves.Length; ++i) {
-                temp_p.Add(makeDrawingCurve(currentPopulationCurves[i], canvasSize[i]));
+                temp_p.Add(makeDrawingCurve(currentPopulationCurves[i], parentCanvasSizes[i]));
             }
         }
 
         //
         // Update Airfoil Curves
+        // This function will be called when the preview windows that display airfoils will be updated.
         //
         private static Point[][] updateCurves(Airfoil.Airfoil[] airfoils) {
             List<Point[]> temp_points = new List<Point[]>();
             foreach (var airfoil in airfoils) {
-                Interpolation.IInterpolator interpolator = new Interpolation.LinearInterpolator(airfoil.airfoilCurve);
+                Interpolation.IInterpolator interpolator = new Interpolation.LinearInterpolator(
+                    Airfoil.PairedPoint.convertToPointArray(airfoil.airfoilCurve, Airfoil.PairedPoint.Direction.FromUpperTrailing)
+                );
                 temp_points.Add(interpolator.curve(airfoilPreviewResolutions));
             }
             return temp_points.ToArray();
         }
 
         //
-        // Make airfoil Curve Points in the Display Coordinate
+        // Make airfoil Curve Points on the Display Coordinate
         //
-        private static PointCollection makeDrawingCurve(Point[] curve, Size canvasSize) {
-            AirfoilPreview.Scaler pointScaler = new AirfoilPreview.Scaler(canvasSize, curve);
+        private static PointCollection? makeDrawingCurve(Point[] curve, Size canvasSize) {
+            if (curve == null) return null;
 
+            AirfoilPreview.Scaler pointScaler = new AirfoilPreview.Scaler(canvasSize, curve);
             return new PointCollection(pointScaler.adjustScale(curve));
         }
     }

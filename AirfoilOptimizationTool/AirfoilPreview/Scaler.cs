@@ -32,14 +32,14 @@ namespace AirfoilOptimizationTool.AirfoilPreview
 
             _pointsArray = points;
 
-            var gmin = min(_pointsArray[0], Axis.x).X;
-            var gmax = max(_pointsArray[0], Axis.x).X;
+            var gmin = min(_pointsArray[0], Axis.x)?.X ?? 0;
+            var gmax = max(_pointsArray[0], Axis.x)?.X ?? 0;
             foreach (var p in _pointsArray) {
-                if (min(p, Axis.x).X < gmin) {
-                    gmin = min(p, Axis.x).X;
+                if (min(p, Axis.x)?.X < gmin) {
+                    gmin = (double)(min(p, Axis.x)?.X);
                 }
-                if (max(p, Axis.x).X > gmax) {
-                    gmax = max(p, Axis.x).X;
+                if (max(p, Axis.x)?.X > gmax) {
+                    gmax = (double)(max(p, Axis.x)?.X);
                 }
             }
 
@@ -54,14 +54,14 @@ namespace AirfoilOptimizationTool.AirfoilPreview
 
             _pointsArray = points;
 
-            var gmin = min(_pointsArray[0], Axis.x).X;
-            var gmax = max(_pointsArray[0], Axis.x).X;
+            var gmin = min(_pointsArray[0], Axis.x)?.X ?? 0;
+            var gmax = max(_pointsArray[0], Axis.x)?.X ?? 0;
             foreach (var p in _pointsArray) {
-                if (min(p, Axis.x).X < gmin) {
-                    gmin = min(p, Axis.x).X;
+                if (min(p, Axis.x)?.X < gmin) {
+                    gmin = (double)(min(p, Axis.x)?.X);
                 }
-                if (max(p, Axis.x).X > gmax) {
-                    gmax = max(p, Axis.x).X;
+                if (max(p, Axis.x)?.X > gmax) {
+                    gmax = (double)(max(p, Axis.x)?.X);
                 }
             }
 
@@ -72,6 +72,7 @@ namespace AirfoilOptimizationTool.AirfoilPreview
         }
 
         public Point[] adjustScale(Point[] points) {
+            if (points == null) return null;
             if (points.Length == 0) { return new Point[0]; }
 
             List<Point> pointSet = new List<Point>();
@@ -92,8 +93,9 @@ namespace AirfoilOptimizationTool.AirfoilPreview
                 return point.Y;
             }
         }
-        private static Point min(Point[] points, Axis axis) {
-            if (points.Length == 0) { return new Point(0, 0); }
+        private static Point? min(Point[] points, Axis axis) {
+            if (points == null) return null;
+            if (points?.Length == 0) { return null; }
 
             var min = component(points[0], axis);
             var minPoint = points[0];
@@ -106,8 +108,9 @@ namespace AirfoilOptimizationTool.AirfoilPreview
 
             return minPoint;
         }
-        private static Point max(Point[] points, Axis axis) {
-            if (points.Length == 0) { return new Point(0, 0); }
+        private static Point? max(Point[] points, Axis axis) {
+            if (points == null) return null;
+            if (points?.Length == 0) { return null; }
 
             var max = component(points[0], axis);
             var maxPoint = points[0];
