@@ -23,28 +23,41 @@ namespace AirfoilOptimizationTool
         private Airfoil.Airfoil[] _candidates;
         private Point[][] _currentPopulationCurves;
         private Point[][] _candidatesCurves;
-        private PointCollection[] _drawingCurrentPopulationCurves;
-        private PointCollection[] _drawingCandidateCurves;
+        private ObservableCollection<PointCollection> _drawingCurrentPopulationCurves;
+        private ObservableCollection<PointCollection> _drawingCandidateCurves;
+        private int displayingRangeStartsIndexOfParents;
+        private int displayinhRangeStartsIndexOfCandidates;
 
-        private ObservableCollection<Size> _parentCanvasSize;
-        private ObservableCollection<Size> _candidateCanvasSize;
+        private Size _parentsCanvasSize;
+        private Size _candidatesCanvasSize;
+
+        // Event
+        private delegate void CanvasSizeWasChangedEventhandler();
+        private event CanvasSizeWasChangedEventhandler CanvasSizeWasChanged;
 
         // Constructor
         public MainWindowViewModel() {
-            // Instantiate ObservableCollections
-            _parentCanvasSize = new ObservableCollection<Size>(new Size[numberOfParentPreviewWindows]);
-            _candidateCanvasSize = new ObservableCollection<Size>(new Size[numberOfCandidatePreviewWindows]);
+            // Set Displaying Airfoil Preview Range
+            displayingRangeStartsIndexOfParents = 0;
+            displayinhRangeStartsIndexOfCandidates = 0;
 
-            // Register Evnet handlers
-            _parentCanvasSize.CollectionChanged += canvasSizeDidChange;
-            _candidateCanvasSize.CollectionChanged += canvasSizeDidChange;
-            
+            // Instantiate CanvasSizes
+            _parentsCanvasSize = new Size();
+            _candidatesCanvasSize = new Size();
+
+            // Instantiate Drawing Curve Collection
+            _drawingCurrentPopulationCurves = new ObservableCollection<PointCollection>(new PointCollection[numberOfParentPreviewWindows]);
+            _drawingCandidateCurves = new ObservableCollection<PointCollection>(new PointCollection[numberOfCandidatePreviewWindows]);
+
             // Generate Mock for debugging
             _currentPopulationCurves = new Point[numberOfParentPreviewWindows][];
             _currentPopulationCurves[0] = new Point[] {
                 new Point(10, 0),
                 new Point(0, 0)
             };
+
+            // Register Callbacks to EventHandler
+            CanvasSizeWasChanged += canvasSizeWasChanged;
 
             updateAirfoilPreviews();
         }
@@ -80,44 +93,92 @@ namespace AirfoilOptimizationTool
         //
         // Binding Properties
         //
-        public PointCollection[] drawingCurrentPopulationCurve {
+        public ObservableCollection<PointCollection> drawingCurrentPopulationCurve {
             get => _drawingCurrentPopulationCurves;
             private set {
                 _drawingCurrentPopulationCurves = value;
                 notifyPropertyDidChange(nameof(drawingCurrentPopulationCurve));
             }
         }
-        public PointCollection[] drawingCandidatesCurve {
+        public ObservableCollection<PointCollection> drawingCandidatesCurve {
             get => _drawingCandidateCurves;
             private set {
                 _drawingCandidateCurves = value;
                 notifyPropertyDidChange(nameof(drawingCandidatesCurve));
             }
         }
-        public ObservableCollection<Size> parentCanvasSizes {
-            get => _parentCanvasSize;
-        }
-        public ObservableCollection<Size> candidateCanvasSizes {
-            get => _candidateCanvasSize;
-        }
-
-        // Callbacks
 
         //
-        // Canvas size was changed
+        // Properties of Canvas size
         //
-        private void canvasSizeDidChange(object sender, NotifyCollectionChangedEventArgs e) {
+        public Size parentsCanvasSize {
+            get => _parentsCanvasSize;
+            set {
+                _parentsCanvasSize = value;
+                CanvasSizeWasChanged();
+            }
+        }
+        public Size candidatesCanvasSize {
+            get => _candidatesCanvasSize;
+            set {
+                _candidatesCanvasSize = value;
+                CanvasSizeWasChanged();
+            }
+        }
+
+        //
+        // Callbacks ========================================== //
+
+        //
+        // Notify when properties in this class be changed
+        // 
+        private void canvasSizeWasChanged() {
             updateAirfoilPreviews();
         }
+
+        //
+        // Updating Previews ================================== //
 
         //
         // Preview Updater
         //
         private void updateAirfoilPreviews() {
             List<PointCollection> temp_p = new List<PointCollection>();
-            for (var i = 0; i < currentPopulationCurves.Length; ++i) {
-                temp_p.Add(makeDrawingCurve(currentPopulationCurves[i], parentCanvasSizes[i]));
+            List<PointCollection> temp_c = new List<PointCollection>();
+
+            // Generate Points Drawing on each Canvas
+            if (currentPopulationCurves != null) {
+                for (var i = 0; i < currentPopulationCurves.Length; ++i) {
+                    var dcp = makeDrawingCurve(currentPopulationCurves?[i], _parentsCanvasSize);
+                    if (dcp != null) temp_p.Add(dcp);
+                }
             }
+            if (candidatesCurves != null) {
+                for (var i = 0; i < candidatesCurves.Length; ++i) {
+                    var dcc = makeDrawingCurve(candidatesCurves?[i], _candidatesCanvasSize);
+                    if (dcc != null) temp_c.Add(dcc);
+                }
+            }
+
+            // Update Drawing Curve Points
+            //
+            // Parents
+            ObservableCollection<PointCollection> tempDrawingP = new ObservableCollection<PointCollection>();
+            for (int i = 0; i < numberOfParentPreviewWindows; ++i) {
+                if (i + displayingRangeStartsIndexOfParents < temp_p.Count) 
+                    tempDrawingP.Add(temp_p[i + displayinhRangeStartsIndexOfCandidates]);
+                else tempDrawingP.Add(new PointCollection());
+            }
+            drawingCurrentPopulationCurve = tempDrawingP;
+            //
+            // Candidates
+            ObservableCollection<PointCollection> tempDrawingC = new ObservableCollection<PointCollection>();
+            for (int i = 0; i < numberOfCandidatePreviewWindows; ++i) {
+                if (i + displayinhRangeStartsIndexOfCandidates < temp_c.Count) 
+                    tempDrawingC.Add(temp_c[i + displayinhRangeStartsIndexOfCandidates]);
+                else tempDrawingC.Add(new PointCollection());
+            }
+            drawingCandidatesCurve = tempDrawingC;
         }
 
         //

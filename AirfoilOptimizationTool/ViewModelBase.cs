@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace AirfoilOptimizationTool
 {
-    public class ViewModelBase : INotifyPropertyChanges
+    public class ViewModelBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler propertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void notifyPropertyDidChange(string propertyName) 
         {
-            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

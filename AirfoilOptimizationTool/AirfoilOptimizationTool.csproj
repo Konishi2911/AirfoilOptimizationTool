@@ -71,7 +71,6 @@
     </Page>
     <Compile Include="Airfoil\Airfoil.cs" />
     <Compile Include="Airfoil\AirfoilCharacteristics.cs" />
-    <Compile Include="INotifyPropertyChanges.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
