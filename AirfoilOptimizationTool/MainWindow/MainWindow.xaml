@@ -3,8 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:AirfoilOptimizationTool"
         xmlns:behavior="clr-namespace:AirfoilOptimizationTool.MainWindow.Behavior"
+        xmlns:trigger="clr-namespace:AirfoilOptimizationTool.MainWindow.EventTrigger"
+        xmlns:actoin="clr-namespace:AirfoilOptimizationTool.MainWindow.Actions"
         mc:Ignorable="d"
         Title="MainWindow" Height="615" Width="761">
 
@@ -12,10 +15,16 @@
         <local:MainWindowViewModel/>
     </Window.DataContext>
 
+    <i:Interaction.Triggers>
+        <trigger:GAConfigurationWindowTrigger>
+            <actoin:GAConfigurationWindowAction/>
+        </trigger:GAConfigurationWindowTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Grid Margin="0,28,0,12">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition MinWidth="350"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -151,7 +160,7 @@
             </Grid>
             <Label Content="Airfoils" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24" Height="39" Width="102"/>
             <GridSplitter HorizontalAlignment="Stretch" Height="5" Margin="10,0" VerticalAlignment="Top" Grid.Row="2" Grid.ColumnSpan="2"/>
-            <Grid HorizontalAlignment="Left" Height="325" Margin="0,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="377">
+            <Grid HorizontalAlignment="Stretch" Margin="0,10,0,0" Grid.Row="2" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition/>
@@ -159,17 +168,43 @@
                 <Label Content="GA-Information" Margin="10,0,5,0" FontWeight="Bold" FontSize="24"/>
                 <Label Content="Current Generation :" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top"/>
                 <Label Content="Optimal Individual :" HorizontalAlignment="Left" Margin="10,36,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-                <Label Content="Label" HorizontalAlignment="Right" Margin="0,10,10,0" Grid.Row="1" VerticalAlignment="Top" Width="244"/>
-                <Label Content="Label" HorizontalAlignment="Right" Margin="0,36,10,0" Grid.Row="1" VerticalAlignment="Top" Width="244"/>
+                <Label Content="Label" Margin="123,10,10,0" Grid.Row="1" VerticalAlignment="Top"/>
+                <Label Content="Label" Margin="123,36,10,0" Grid.Row="1" VerticalAlignment="Top"/>
             </Grid>
-            <Grid HorizontalAlignment="Left" Height="325" Margin="0,10,-1,0" Grid.Row="2" VerticalAlignment="Top" Width="377" Grid.Column="1">
+            <Grid HorizontalAlignment="Stretch" Margin="0,10,0,0" Grid.Row="2" VerticalAlignment="Stretch" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Label Content="Detail" Margin="10,0,5,0" FontWeight="Bold" FontSize="24"/>
+                <Label Content="Detail" Margin="10,0" FontWeight="Bold" FontSize="24"/>
+                <TabControl Grid.Row="1" TabStripPlacement="Bottom" Margin="5,0,10,10" Background="{x:Null}">
+                    <TabItem Header="Airfoil">
+                        <Grid>
+                            <Border BorderBrush="Black" BorderThickness="1" Margin="1,34,1,79" Grid.Column="0">
+                                <Canvas behavior:CanvasSizeBehavior.EnableSize="True"
+                                        behavior:CanvasSizeBehavior.Size="{Binding detailCanvasSize, Mode=OneWayToSource}">
+                                    <Polyline Stroke ="Black" StrokeThickness="1" Points="{Binding drawingDetailCurve, Mode=OneWay}"/>
+                                    <Polyline Stroke ="Red" StrokeThickness="1" Points="{Binding drawingLeadingEdgeCurve, Mode=OneWay}"/>
+                                    <Polyline Stroke ="Green" StrokeThickness="1" Points="{Binding drawingCamberLineCurve, Mode=OneWay}"/>
+                                </Canvas>
+                            </Border>
+                            <Label Content="AirfoilName" VerticalAlignment="Top" FontSize="18" FontWeight="Bold"/>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="TabItem">
+                        <Grid/>
+                    </TabItem>
+                    <Label Content="Label" Height="100" Width="100"/>
+                </TabControl>
             </Grid>
+            <GridSplitter Margin="0,10" Grid.Row="2" Width="5"/>
         </Grid>
-        <Menu Height="16" VerticalAlignment="Top"/>
+        <Menu Height="20" VerticalAlignment="Top">
+            <MenuItem Header="File (_F)"/>
+            <MenuItem Header="Edit (_E)"/>
+            <MenuItem Header="GeneticAlgorithm (_G)">
+                <MenuItem Header="Configuration" Command="{Binding showGAConfigurationDialog}"/>
+            </MenuItem>
+        </Menu>
     </Grid>
 </Window>

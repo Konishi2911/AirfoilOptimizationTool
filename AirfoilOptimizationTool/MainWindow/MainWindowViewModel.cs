@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AirfoilOptimizationTool.MainWindow.Messenger;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -19,6 +20,7 @@ namespace AirfoilOptimizationTool
         private const int numberOfParentPreviewWindows = 10;
         private const int numberOfCandidatePreviewWindows = 10;
 
+        // ## Airfoil Preview View
         private Airfoil.Airfoil[] _currentPopulation;
         private Airfoil.Airfoil[] _candidates;
         private Point[][] _currentPopulationCurves;
@@ -30,6 +32,15 @@ namespace AirfoilOptimizationTool
 
         private Size _parentsCanvasSize;
         private Size _candidatesCanvasSize;
+
+
+        // ## Airfoil Detail View
+        private PointCollection _drawingDetailCurve;
+        private PointCollection _leadingEdgeCurve;
+        private PointCollection _camberLineCurve;
+
+        private Size _detailCanvasSize;
+
 
         // Event
         private delegate void CanvasSizeWasChangedEventhandler();
@@ -49,12 +60,16 @@ namespace AirfoilOptimizationTool
             _drawingCurrentPopulationCurves = new ObservableCollection<PointCollection>(new PointCollection[numberOfParentPreviewWindows]);
             _drawingCandidateCurves = new ObservableCollection<PointCollection>(new PointCollection[numberOfCandidatePreviewWindows]);
 
-            // Generate Mock for debugging
+            // Generate Mock for debugging --------------------------------------------- //
             _currentPopulationCurves = new Point[numberOfParentPreviewWindows][];
             _currentPopulationCurves[0] = new Point[] {
-                new Point(10, 0),
-                new Point(0, 0)
+                new Point(1, 0),
+                new Point(0.3, 0.05),
+                new Point(0, 0),
+                new Point(0.5, 0.01),
+                new Point(1, 0)
             };
+            // ------------------------------------------------------------------------- //
 
             // Register Callbacks to EventHandler
             CanvasSizeWasChanged += canvasSizeWasChanged;
@@ -64,7 +79,7 @@ namespace AirfoilOptimizationTool
 
         #region Properties and Setters
         //
-        // Properties and Setters
+        // Airfoil Preview Curves ==================================== //
         //
         public Point[][] currentPopulationCurves {
             get => _currentPopulationCurves;
@@ -91,8 +106,9 @@ namespace AirfoilOptimizationTool
         #endregion
 
         //
-        // Binding Properties
+        // Binding Properties =========================================== //
         //
+        // ## Airfoil Preview View
         public ObservableCollection<PointCollection> drawingCurrentPopulationCurve {
             get => _drawingCurrentPopulationCurves;
             private set {
@@ -108,9 +124,44 @@ namespace AirfoilOptimizationTool
             }
         }
 
+
+        // ## Airfoil Detail View
+        public PointCollection drawingDetailCurve {
+            get => _drawingDetailCurve;
+            set {
+                _drawingDetailCurve = value;
+                notifyPropertyDidChange(nameof(drawingDetailCurve));
+            }
+        }
+        public PointCollection drawingLeadingEdgeCurve {
+            get => _leadingEdgeCurve;
+            set {
+                _leadingEdgeCurve = value;
+                notifyPropertyDidChange(nameof(drawingLeadingEdgeCurve));
+            }
+        }
+        public PointCollection drawingCamberLineCurve {
+            get => _camberLineCurve;
+            set {
+                _camberLineCurve = value;
+                notifyPropertyDidChange(nameof(drawingCamberLineCurve));
+            }
+        }
+
+        // ## Genetic Algorithm Configuration
+        public TriggerCommand showGAConfigurationDialog => new TriggerCommand(
+            () => {
+                GAConfigurationMessenger.instance.showDialog();
+            }, 
+            () => true
+        );
+        
+
+
         //
-        // Properties of Canvas size
+        // Properties of Canvas size ========================= //
         //
+        // ## Airfoil Preview View
         public Size parentsCanvasSize {
             get => _parentsCanvasSize;
             set {
@@ -126,6 +177,15 @@ namespace AirfoilOptimizationTool
             }
         }
 
+        // ## Airfoil Detail View
+        public Size detailCanvasSize {
+            get => _detailCanvasSize;
+            set {
+                _detailCanvasSize = value;
+                CanvasSizeWasChanged();
+            }
+        }
+
         //
         // Callbacks ========================================== //
 
@@ -135,6 +195,7 @@ namespace AirfoilOptimizationTool
         private void canvasSizeWasChanged() {
             updateAirfoilPreviews();
         }
+
 
         //
         // Updating Previews ================================== //
@@ -203,7 +264,7 @@ namespace AirfoilOptimizationTool
             if (curve == null) return null;
 
             AirfoilPreview.Scaler pointScaler = new AirfoilPreview.Scaler(canvasSize, curve);
-            return new PointCollection(pointScaler.adjustScale(curve));
+            return new PointCollection(pointScaler.adjustScale(curve, true));
         }
     }
 }

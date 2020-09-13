@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AirfoilOptimizationTool.AirfoilRepresentationMethod {
-    class BasisAirfoilsMethod {
+namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
+    class BasisAirfoilsMethod : IAirfoilRepresentationMethod {
         private int numberOfPoints;
         private Airfoil.Airfoil[] _basisAirfoils;
         private double[] weights;
@@ -24,16 +24,18 @@ namespace AirfoilOptimizationTool.AirfoilRepresentationMethod {
             _basisAirfoils = airfoils.ToArray();
         }
 
+
         public Airfoil.Airfoil getAirfoil(double[] weight) {
-            if (_basisAirfoils.Length != weight.Length) return null;
+            if (_basisAirfoils == null) return null;
+            if (_basisAirfoils.Length != weights.Length) return null;
 
             List<Airfoil.PairedPoint> newCurve = new List<Airfoil.PairedPoint>();
             for (var i = 0; i < numberOfPoints; ++i) {
                 double tempX = 0.0, tempY1 = 0.0, tempY2 = 0.0;
-                for (var j = 0; j < weight.Length; ++j) {
-                    tempX += _basisAirfoils[j].airfoilCurve[i].X * weight[j];
-                    tempY1 += _basisAirfoils[j].airfoilCurve[i].Y1 * weight[j];
-                    tempY2 += _basisAirfoils[j].airfoilCurve[i].Y2 * weight[j];
+                for (var j = 0; j < weights.Length; ++j) {
+                    tempX += _basisAirfoils[j].airfoilCurve[i].X * weights[j];
+                    tempY1 += _basisAirfoils[j].airfoilCurve[i].Y1 * weights[j];
+                    tempY2 += _basisAirfoils[j].airfoilCurve[i].Y2 * weights[j];
                 }
                 newCurve.Add(new Airfoil.PairedPoint(tempX, tempY1, tempY2));
             }

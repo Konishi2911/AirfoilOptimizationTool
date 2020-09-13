@@ -38,8 +38,14 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -59,12 +65,27 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AirfoilPreview\Scaler.cs" />
-    <Compile Include="AirfoilRepresentationMethod\BasisAirfoilsMethod.cs" />
+    <Compile Include="AirfoilRepresentation\AirfoilRepresentationManager.cs" />
+    <Compile Include="AirfoilRepresentation\Method\BasisAirfoilsMethod.cs" />
+    <Compile Include="AirfoilRepresentation\Method\IAirfoilRepresentationMethod.cs" />
     <Compile Include="Airfoil\PairedPoint.cs" />
+    <Compile Include="GAConfigurationWindow\GAConfigurationWindow.xaml.cs">
+      <DependentUpon>GAConfigurationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GAConfigurationWindow\GAConfigurationWindowViewModel.cs" />
+    <Compile Include="GAProgress\GAProgressManager.cs" />
     <Compile Include="Interpolation\IInterpolator.cs" />
     <Compile Include="Interpolation\LinearInterpolator.cs" />
+    <Compile Include="MainWindow\Actions\GAConfigurationWindowAction.cs" />
     <Compile Include="MainWindow\Behavior\CanvasSizeBehavior.cs" />
+    <Compile Include="MainWindow\EventTrigger\GAConfigurationWindowTrigger.cs" />
+    <Compile Include="MainWindow\Messenger\GAConfigurationMessenger.cs" />
+    <Compile Include="TriggerCommand.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Page Include="GAConfigurationWindow\GAConfigurationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -99,6 +120,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

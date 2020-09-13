@@ -71,15 +71,23 @@ namespace AirfoilOptimizationTool.AirfoilPreview
             offsetY = 0.5 * _height;
         }
 
-        public Point[] adjustScale(Point[] points) {
+        public Point[] adjustScale(Point[] points, bool isYInverse) {
             if (points == null) return null;
             if (points.Length == 0) { return new Point[0]; }
 
             List<Point> pointSet = new List<Point>();
-            foreach (var point in points) {
-                pointSet.Add(new Point(
-                        point.X * magnification + offsetX,
-                        point.Y * magnification + offsetY));
+            if (isYInverse) {
+                foreach (var point in points) {
+                    pointSet.Add(new Point(
+                            point.X * magnification + offsetX,
+                            point.Y * -magnification + offsetY));
+                }
+            } else {
+                foreach (var point in points) {
+                    pointSet.Add(new Point(
+                            point.X * magnification + offsetX,
+                            point.Y * magnification + offsetY));
+                }
             }
             return pointSet.ToArray();
         }
