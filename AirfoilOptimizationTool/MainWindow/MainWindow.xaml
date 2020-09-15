@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:AirfoilOptimizationTool"
-        xmlns:behavior="clr-namespace:AirfoilOptimizationTool.MainWindow.Behavior"
+        xmlns:behavior="clr-namespace:AirfoilOptimizationTool.General.Behavior"
         xmlns:trigger="clr-namespace:AirfoilOptimizationTool.MainWindow.EventTrigger"
         xmlns:actoin="clr-namespace:AirfoilOptimizationTool.MainWindow.Actions"
         mc:Ignorable="d"
-        Title="MainWindow" Height="615" Width="761">
+        Title="MainWindow" Height="759" Width="1126">
 
     <Window.DataContext>
         <local:MainWindowViewModel/>
@@ -25,12 +25,12 @@
         <Grid Margin="0,28,0,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="350"/>
-                <ColumnDefinition/>
+                <ColumnDefinition MinWidth="350"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
-                <RowDefinition Height="169*"/>
-                <RowDefinition Height="335*"/>
+                <RowDefinition Height="169*" MinHeight="200"/>
+                <RowDefinition Height="335*" MinHeight="400"/>
             </Grid.RowDefinitions>
             <Grid Margin="10,0,10,5" Grid.Row="1" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
@@ -163,13 +163,23 @@
             <Grid HorizontalAlignment="Stretch" Margin="0,10,0,0" Grid.Row="2" VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
-                    <RowDefinition/>
+                    <RowDefinition Height="77*"/>
+                    <RowDefinition MinHeight="100" Height="50*"/>
                 </Grid.RowDefinitions>
                 <Label Content="GA-Information" Margin="10,0,5,0" FontWeight="Bold" FontSize="24"/>
-                <Label Content="Current Generation :" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-                <Label Content="Optimal Individual :" HorizontalAlignment="Left" Margin="10,36,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-                <Label Content="Label" Margin="123,10,10,0" Grid.Row="1" VerticalAlignment="Top"/>
-                <Label Content="Label" Margin="123,36,10,0" Grid.Row="1" VerticalAlignment="Top"/>
+                <Label Content="Current Generation :" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="118"/>
+                <Label Content="Optimal Individual :" HorizontalAlignment="Left" Margin="10,36,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="113"/>
+                <Label Content="Label" Margin="123,10,10,0" Grid.Row="1" VerticalAlignment="Top" Height="26"/>
+                <Label Content="Label" Margin="123,36,10,0" Grid.Row="1" VerticalAlignment="Top" Height="26"/>
+                <GridSplitter HorizontalAlignment="Stretch" Height="5" Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0"/>
+                <Grid Grid.Row="2" Margin="0,0,5,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Log" Margin="10,0,20,0" FontWeight="Bold" FontSize="18"/>
+                    <TextBox Grid.Row="1" TextWrapping="Wrap" Margin="10,0,5,10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" MinHeight="50" Text="{Binding logMessage, Mode=OneWay}"/>
+                </Grid>
             </Grid>
             <Grid HorizontalAlignment="Stretch" Margin="0,10,0,0" Grid.Row="2" VerticalAlignment="Stretch" Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -194,7 +204,6 @@
                     <TabItem Header="TabItem">
                         <Grid/>
                     </TabItem>
-                    <Label Content="Label" Height="100" Width="100"/>
                 </TabControl>
             </Grid>
             <GridSplitter Margin="0,10" Grid.Row="2" Width="5"/>

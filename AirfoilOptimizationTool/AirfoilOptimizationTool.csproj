@@ -69,17 +69,33 @@
     <Compile Include="AirfoilRepresentation\Method\BasisAirfoilsMethod.cs" />
     <Compile Include="AirfoilRepresentation\Method\IAirfoilRepresentationMethod.cs" />
     <Compile Include="Airfoil\PairedPoint.cs" />
+    <Compile Include="DataIO\SeparatedValues.cs" />
+    <Compile Include="GAConfigurationWindow\Actions\OpenFileSelectorDialog.cs" />
+    <Compile Include="GAConfigurationWindow\AirfoilRepresentation\BasisAirfoilItem.cs" />
+    <Compile Include="GAConfigurationWindow\EventTriggers\OpenFileSelectorDialogEvent.cs" />
     <Compile Include="GAConfigurationWindow\GAConfigurationWindow.xaml.cs">
       <DependentUpon>GAConfigurationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GAConfigurationWindow\GAConfigurationWindowViewModel.cs" />
+    <Compile Include="GAConfigurationWindow\Messenger\OpenFileSelectorDialogEventArgs.cs" />
+    <Compile Include="GAConfigurationWindow\Messenger\OpenFileSelectorDialogMessenger.cs" />
     <Compile Include="GAProgress\GAProgressManager.cs" />
+    <Compile Include="General\Converters\PreviewCurveConverter.cs" />
     <Compile Include="Interpolation\IInterpolator.cs" />
     <Compile Include="Interpolation\LinearInterpolator.cs" />
+    <Compile Include="Logs\Appenders\Appender.cs" />
+    <Compile Include="Logs\Appenders\IAppender.cs" />
+    <Compile Include="Logs\Appenders\TextFieldAppender.cs" />
+    <Compile Include="Logs\Formatter\Formatter.cs" />
+    <Compile Include="Logs\Formatter\IFormatter.cs" />
+    <Compile Include="Logs\Logger.cs" />
+    <Compile Include="Logs\LogItem.cs" />
+    <Compile Include="Logs\Security.cs" />
     <Compile Include="MainWindow\Actions\GAConfigurationWindowAction.cs" />
-    <Compile Include="MainWindow\Behavior\CanvasSizeBehavior.cs" />
+    <Compile Include="General\Behaviors\CanvasSizeBehavior.cs" />
     <Compile Include="MainWindow\EventTrigger\GAConfigurationWindowTrigger.cs" />
     <Compile Include="MainWindow\Messenger\GAConfigurationMessenger.cs" />
+    <Compile Include="OptimizationManager.cs" />
     <Compile Include="TriggerCommand.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Page Include="GAConfigurationWindow\GAConfigurationWindow.xaml">

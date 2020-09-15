@@ -1,4 +1,6 @@
-﻿using AirfoilOptimizationTool.MainWindow.Messenger;
+﻿using AirfoilOptimizationTool.Logs;
+using AirfoilOptimizationTool.Logs.Appenders;
+using AirfoilOptimizationTool.MainWindow.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,6 +43,9 @@ namespace AirfoilOptimizationTool
 
         private Size _detailCanvasSize;
 
+        // ## Log View
+        private string _logMessage;
+
 
         // Event
         private delegate void CanvasSizeWasChangedEventhandler();
@@ -60,6 +65,12 @@ namespace AirfoilOptimizationTool
             _drawingCurrentPopulationCurves = new ObservableCollection<PointCollection>(new PointCollection[numberOfParentPreviewWindows]);
             _drawingCandidateCurves = new ObservableCollection<PointCollection>(new PointCollection[numberOfCandidatePreviewWindows]);
 
+            //Setup Logger
+            TextFieldAppender appender = new TextFieldAppender();
+            appender.ReadyToLog += Appender_ReadyToLog;
+            appender.setFormat("[%d] [%p] : %m");
+            Logger.getLogger("GAStandardLogger").addAppender(appender);
+
             // Generate Mock for debugging --------------------------------------------- //
             _currentPopulationCurves = new Point[numberOfParentPreviewWindows][];
             _currentPopulationCurves[0] = new Point[] {
@@ -75,6 +86,12 @@ namespace AirfoilOptimizationTool
             CanvasSizeWasChanged += canvasSizeWasChanged;
 
             updateAirfoilPreviews();
+
+            Logger.getLogger("GAStandardLogger").info("Start Application...");
+        }
+
+        private void Appender_ReadyToLog(object sender, Appender.LogReadyEventArgs e) {
+            logMessage += e.logMessage;
         }
 
         #region Properties and Setters
@@ -148,7 +165,16 @@ namespace AirfoilOptimizationTool
             }
         }
 
-        // ## Genetic Algorithm Configuration
+        // ## Log View
+        public string logMessage {
+            get => _logMessage;
+            set {
+                _logMessage = value;
+                notifyPropertyDidChange(nameof(logMessage));
+            }
+        }
+
+        // ## Menu: Genetic Algorithm Configuration
         public TriggerCommand showGAConfigurationDialog => new TriggerCommand(
             () => {
                 GAConfigurationMessenger.instance.showDialog();

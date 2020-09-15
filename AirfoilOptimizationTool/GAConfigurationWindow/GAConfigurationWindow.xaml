@@ -4,6 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AirfoilOptimizationTool.GAConfigurationWindow"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behavior="clr-namespace:AirfoilOptimizationTool.General.Behavior"
+        xmlns:trigger="clr-namespace:AirfoilOptimizationTool.GAConfigurationWindow.EventTriggers"
+        xmlns:actions="clr-namespace:AirfoilOptimizationTool.GAConfigurationWindow.Actions"
+        xmlns:converter="clr-namespace:AirfoilOptimizationTool.General.Converters"
         mc:Ignorable="d"
         Title="GAConfigurationWindow" Height="498" Width="546.5">
 
@@ -11,12 +16,36 @@
         <local:GAConfigurationWindowViewModel/>
     </Window.DataContext>
 
+    <i:Interaction.Triggers>
+        <trigger:OpenFileSelectorDialogEvent>
+            <actions:OpenFileSelectorDialog/>
+        </trigger:OpenFileSelectorDialogEvent>
+    </i:Interaction.Triggers>
+
     <Grid>
         <TabControl Margin="15,55,10,35">
             <TabItem Header="Airfoil Representation">
                 <Grid>
                     <Label Content="Airfoil Representation Method" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <ComboBox Margin="185,14,10,0" VerticalAlignment="Top" ItemsSource="{Binding airfoilRepresentationMethod}"/>
+                    <ComboBox Margin="185,14,10,0" VerticalAlignment="Top" ItemsSource="{Binding airfoilRepresentationMethod}" SelectedValue="{Binding selectedRepresentationMethod}"/>
+                    <Grid Margin="10,41,10,10">
+                        <DataGrid Margin="0,0,0,25" AutoGenerateColumns="False" ItemsSource="{Binding basisAirfoilItems}" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="50">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn ClipboardContentBinding="{x:Null}" Header="Name" Binding="{Binding airfoilName}" Width="100" IsReadOnly="True"/>
+                                <DataGridTemplateColumn ClipboardContentBinding="{x:Null}" Header="Preview" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Canvas behavior:CanvasSizeBehavior.EnableSize="true" behavior:CanvasSizeBehavior.Size="{Binding canvasSize}">
+                                                <Polyline Stroke="Black" Points="{Binding airfoilCurve}"/>
+                                            </Canvas>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Content="Add" VerticalAlignment="Bottom" Width="60" HorizontalAlignment="Right" Command="{Binding addButtonDidClick}"/>
+                        <Button Content="Remove" Margin="0,0,65,0" VerticalAlignment="Bottom" Width="60" HorizontalAlignment="Right"/>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Genetic Algorithm Method">

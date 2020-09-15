@@ -14,6 +14,8 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation {
             representationMethod = method;
         }
 
+        //
+        // Add Optimizing Parameter
         public void addParameter(double[] parameter) {
             optimizingParameters.Add(parameter);
         }
