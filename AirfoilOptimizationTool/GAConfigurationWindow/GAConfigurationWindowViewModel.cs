@@ -1,4 +1,5 @@
-﻿using AirfoilOptimizationTool.DataIO;
+﻿using AirfoilOptimizationTool.AirfoilPreview;
+using AirfoilOptimizationTool.DataIO;
 using AirfoilOptimizationTool.GAConfigurationWindow.AirfoilRepresentation;
 using AirfoilOptimizationTool.GAConfigurationWindow.Messenger;
 using AirfoilOptimizationTool.Logs;
@@ -31,7 +32,7 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow {
 
             // Regist callbacks 
             PropertyChanged += thisPropertisDidChange;
-            _basisAirfoilItems.CollectionChanged += basisAirfoilsDidChange;
+            //_basisAirfoilItems.CollectionChanged += basisAirfoilsDidChange;
 
 
             // Generate Mock for debugging --------------------------------------------- //
@@ -39,7 +40,6 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow {
                 new System.Windows.Point(100, 30),
                 new System.Windows.Point(0, 30)
             };
-            basisAirfoilItems.Add(new BasisAirfoilItem("airfoil", makeDrawingCurve(temp, new Size(376, 47))));
             // ------------------------------------------------------------------------- //
 
         }
@@ -61,18 +61,47 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow {
 
         // ## Basis Airfoil Method
         public ObservableCollection<BasisAirfoilItem> basisAirfoilItems => _basisAirfoilItems;
-        public Size canvasSize {
-            get => _canvasSize;
-            set {
-                _canvasSize = value;
-                notifyPropertyDidChange(nameof(canvasSize));
-            }
-        }
+
         public TriggerCommand addButtonDidClick => new TriggerCommand(() => {
             var path = OpenFileSelectorDialogMessenger.instance.showDialog();
 
             SeparatedValues csv = new SeparatedValues(',');
-            csv.openFromFile(path);
+
+            Logger.getLogger("GAStandardLogger").debug("Open CSV File from \"" + path + "\"");
+            try {
+                //
+                // Open CSV
+                csv.openFromFile(path);
+
+                //
+                // Create Airfoil Instance
+                var airfoil = new AirfoilShapeImporter(csv).getAirfoil();
+                var basisAirfoilItem = new BasisAirfoilItem(airfoil);
+
+                //
+                // Regist Event Callback
+                basisAirfoilItem.canvasSizeDidChange += canvasSizeDidChange;
+
+                //
+                // Add new basis Airfoil item
+                basisAirfoilItems.Add(basisAirfoilItem);
+            }
+            catch (ArgumentNullException e) {
+                Logger.getLogger("GAStandardLogger").error(e.Message);
+            }
+            catch (System.IO.PathTooLongException e) {
+                Logger.getLogger("GAStandardLogger").error(e.Message);
+            }
+            catch (System.IO.DirectoryNotFoundException e) {
+                Logger.getLogger("GAStandardLogger").error(e.Message);
+            }
+            catch (UnauthorizedAccessException e) {
+                Logger.getLogger("GAStandardLogger").error(e.Message);
+            }
+            catch (System.IO.FileNotFoundException e) {
+                Logger.getLogger("GAStandardLogger").error(e.Message);
+            }
+
         }, () => true);
 
         #endregion
@@ -89,23 +118,12 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow {
                 }
             }
         }
-        private void basisAirfoilsDidChange(object sender, NotifyCollectionChangedEventArgs e) {
-            notifyPropertyDidChange(nameof(basisAirfoilItems));
+        private void canvasSizeDidChange(in BasisAirfoilItem sender, EventArgs _) {
+            var converter = new AirfoilPreviewCurveConverter(sender.airfoil, sender.canvasSize);
+            var newCurve = converter.getDrawingOutlineCurve();
+
+            sender.airfoilCurve = newCurve;
         }
         #endregion
-
-
-        //
-        // Private
-        //
-
-        //
-        // Make airfoil Curve Points on the Display Coordinate
-        private static System.Windows.Media.PointCollection? makeDrawingCurve(Point[] curve, Size canvasSize) {
-            if (curve == null) return null;
-
-            AirfoilPreview.Scaler pointScaler = new AirfoilPreview.Scaler(canvasSize, curve);
-            return new System.Windows.Media.PointCollection(pointScaler.adjustScale(curve, true));
-        }
     }
 }

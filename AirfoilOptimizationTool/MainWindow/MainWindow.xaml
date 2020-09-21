@@ -9,7 +9,7 @@
         xmlns:trigger="clr-namespace:AirfoilOptimizationTool.MainWindow.EventTrigger"
         xmlns:actoin="clr-namespace:AirfoilOptimizationTool.MainWindow.Actions"
         mc:Ignorable="d"
-        Title="MainWindow" Height="759" Width="1126">
+        Title="MainWindow" Height="818" Width="1333">
 
     <Window.DataContext>
         <local:MainWindowViewModel/>

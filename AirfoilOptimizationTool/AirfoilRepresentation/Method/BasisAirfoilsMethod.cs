@@ -8,7 +8,6 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
     class BasisAirfoilsMethod : IAirfoilRepresentationMethod {
         private int numberOfPoints;
         private Airfoil.Airfoil[] _basisAirfoils;
-        private double[] weights;
 
         public int numberOfBasis => _basisAirfoils.Length;
 
@@ -18,14 +17,14 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
         public BasisAirfoilsMethod(Airfoil.Airfoil[] basis) {
             List<Airfoil.Airfoil> airfoils = new List<Airfoil.Airfoil>();
             foreach (var airfoil in basis) {
-                airfoils.Add(Airfoil.Airfoil.standardize(airfoil));
+                airfoils.Add(airfoil);
             }
 
             _basisAirfoils = airfoils.ToArray();
         }
 
 
-        public Airfoil.Airfoil getAirfoil(double[] weight) {
+        public Airfoil.Airfoil getAirfoil(double[] weights) {
             if (_basisAirfoils == null) return null;
             if (_basisAirfoils.Length != weights.Length) return null;
 

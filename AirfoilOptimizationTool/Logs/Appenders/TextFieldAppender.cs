@@ -14,7 +14,7 @@ namespace AirfoilOptimizationTool.Logs.Appenders {
         public event LogReadyEventHandler ReadyToLog;
 
         public override void appendLog(LogItem log) {
-            logString = formatter?.formatLog(log) ?? null;
+            logString = formatter?.formatLog(log) + Environment.NewLine ?? null;
 
             // Fire Event
             if (logString != null) {

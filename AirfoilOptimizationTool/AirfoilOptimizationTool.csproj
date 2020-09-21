@@ -64,11 +64,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AirfoilPreview\AirfoilPreviewCurveConverter.cs" />
     <Compile Include="AirfoilPreview\Scaler.cs" />
     <Compile Include="AirfoilRepresentation\AirfoilRepresentationManager.cs" />
     <Compile Include="AirfoilRepresentation\Method\BasisAirfoilsMethod.cs" />
     <Compile Include="AirfoilRepresentation\Method\IAirfoilRepresentationMethod.cs" />
     <Compile Include="Airfoil\PairedPoint.cs" />
+    <Compile Include="Airfoil\PointExtensions.cs" />
+    <Compile Include="CustomControlls\ObservableCanvas.cs" />
+    <Compile Include="DataIO\AirfoilShapeImporter.cs" />
     <Compile Include="DataIO\SeparatedValues.cs" />
     <Compile Include="GAConfigurationWindow\Actions\OpenFileSelectorDialog.cs" />
     <Compile Include="GAConfigurationWindow\AirfoilRepresentation\BasisAirfoilItem.cs" />
@@ -81,6 +85,7 @@
     <Compile Include="GAConfigurationWindow\Messenger\OpenFileSelectorDialogMessenger.cs" />
     <Compile Include="GAProgress\GAProgressManager.cs" />
     <Compile Include="General\Converters\PreviewCurveConverter.cs" />
+    <Compile Include="General\Converters\SeparatedValueToPointConverter.cs" />
     <Compile Include="Interpolation\IInterpolator.cs" />
     <Compile Include="Interpolation\LinearInterpolator.cs" />
     <Compile Include="Logs\Appenders\Appender.cs" />
@@ -117,6 +122,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

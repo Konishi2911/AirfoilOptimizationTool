@@ -12,6 +12,11 @@ namespace AirfoilOptimizationTool.AirfoilPreview
 {
     public class Scaler
     {
+        private double _margineXN;
+        private double _margineXP;
+        private double _margineYN;
+        private double _margineYP;
+
         private double _width;
         private double _height;
 
@@ -49,26 +54,39 @@ namespace AirfoilOptimizationTool.AirfoilPreview
             offsetY = 0.5 * _height;
         }
         public Scaler(Size size, params Point[][] points) {
-            _width = size.Width;
-            _height = size.Height;
+            _width = size.Width - (_margineXN + _margineXP);
+            _height = size.Height - (_margineYN + _margineYP);
 
             _pointsArray = points;
 
-            var gmin = min(_pointsArray[0], Axis.x)?.X ?? 0;
-            var gmax = max(_pointsArray[0], Axis.x)?.X ?? 0;
+            var gxmin = min(_pointsArray[0], Axis.x)?.X ?? 0;
+            var gxmax = max(_pointsArray[0], Axis.x)?.X ?? 0;
+            var gymin = min(_pointsArray[0], Axis.y)?.Y ?? 0;
+            var gymax = max(_pointsArray[0], Axis.y)?.Y ?? 0;
             foreach (var p in _pointsArray) {
-                if (min(p, Axis.x)?.X < gmin) {
-                    gmin = (double)(min(p, Axis.x)?.X);
+                //
+                // Calculate maximum of x
+                if (min(p, Axis.x)?.X < gxmin) {
+                    gxmin = (double)(min(p, Axis.x)?.X);
                 }
-                if (max(p, Axis.x)?.X > gmax) {
-                    gmax = (double)(max(p, Axis.x)?.X);
+                if (max(p, Axis.x)?.X > gxmax) {
+                    gxmax = (double)(max(p, Axis.x)?.X);
+                }
+
+                //
+                // Calculate maximum of y
+                if (min(p, Axis.y)?.Y < gymin) {
+                    gymin = (double)(min(p, Axis.y)?.Y);
+                }
+                if (max(p, Axis.y)?.Y > gymax) {
+                    gymax = (double)(max(p, Axis.y)?.Y);
                 }
             }
 
-            var width = gmax - gmin;
+            var width = gxmax - gxmin;
             magnification = width == 0 ? 0 : _width / width;
-            offsetX = -magnification * gmin;
-            offsetY = 0.5 * _height;
+            offsetX = -magnification * gxmin + _margineXN;
+            offsetY = 0.5 * _height + (gymax + gymin) * magnification / 2;
         }
 
         public Point[] adjustScale(Point[] points, bool isYInverse) {

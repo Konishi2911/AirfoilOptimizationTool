@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AirfoilOptimizationTool.Logs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,11 +42,22 @@ namespace AirfoilOptimizationTool.General.Behavior {
 
         private static void EnableSizeCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
             if ((bool)e.NewValue) {
+                ((FrameworkElement)sender).Unloaded += CanvasSizeBehavior_IsVisibleChanged;
+                ((FrameworkElement)sender).Loaded += CanvasSizeBehavior_Loaded;
                 ((FrameworkElement)sender).SizeChanged += CanvasSizeBehavior_SizeChanged;
                 updatePropertySize((FrameworkElement)sender);
             } else {
+                ((FrameworkElement)sender).Loaded -= CanvasSizeBehavior_Loaded;
                 ((FrameworkElement)sender).SizeChanged -= CanvasSizeBehavior_SizeChanged;
             }
+        }
+
+        private static void CanvasSizeBehavior_IsVisibleChanged(object sender, EventArgs e) {
+            updatePropertySize((FrameworkElement)sender);
+        }
+
+        private static void CanvasSizeBehavior_Loaded(object sender, EventArgs e) {
+            updatePropertySize((FrameworkElement)sender);
         }
 
         private static void CanvasSizeBehavior_SizeChanged(object sender, SizeChangedEventArgs e) {
@@ -55,7 +67,7 @@ namespace AirfoilOptimizationTool.General.Behavior {
             frameworkElement.SetCurrentValue(WidthProperty, frameworkElement.ActualWidth);
             frameworkElement.SetCurrentValue(HeightProperty, frameworkElement.ActualHeight);
             frameworkElement.SetCurrentValue(SizeProperty, new Size(frameworkElement.ActualWidth, 
-                                                             frameworkElement.ActualHeight));
+                                                             frameworkElement.ActualHeight));        
         }
     }
 }

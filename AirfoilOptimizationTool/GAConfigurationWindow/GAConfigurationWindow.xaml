@@ -9,8 +9,9 @@
         xmlns:trigger="clr-namespace:AirfoilOptimizationTool.GAConfigurationWindow.EventTriggers"
         xmlns:actions="clr-namespace:AirfoilOptimizationTool.GAConfigurationWindow.Actions"
         xmlns:converter="clr-namespace:AirfoilOptimizationTool.General.Converters"
+        xmlns:custom="clr-namespace:AirfoilOptimizationTool.CustomControlls"
         mc:Ignorable="d"
-        Title="GAConfigurationWindow" Height="498" Width="546.5">
+        Title="GAConfigurationWindow" Height="498" Width="418.5">
 
     <Window.DataContext>
         <local:GAConfigurationWindowViewModel/>
@@ -29,19 +30,41 @@
                     <Label Content="Airfoil Representation Method" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <ComboBox Margin="185,14,10,0" VerticalAlignment="Top" ItemsSource="{Binding airfoilRepresentationMethod}" SelectedValue="{Binding selectedRepresentationMethod}"/>
                     <Grid Margin="10,41,10,10">
-                        <DataGrid Margin="0,0,0,25" AutoGenerateColumns="False" ItemsSource="{Binding basisAirfoilItems}" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="50">
+                        <DataGrid Margin="0,0,0,25" AutoGenerateColumns="False" ItemsSource="{Binding basisAirfoilItems, Mode=OneWay}" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="80" EnableRowVirtualization="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn ClipboardContentBinding="{x:Null}" Header="Name" Binding="{Binding airfoilName}" Width="100" IsReadOnly="True"/>
-                                <DataGridTemplateColumn ClipboardContentBinding="{x:Null}" Header="Preview" Width="*">
+                                <DataGridTextColumn ClipboardContentBinding="{x:Null}" Header="Name" Binding="{Binding airfoilName, Mode=TwoWay}" Width="100" IsReadOnly="True"/>
+                                <DataGridTemplateColumn ClipboardContentBinding="{x:Null}" Header="Preview" Width="1*" IsReadOnly="True" CanUserReorder="False">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Canvas behavior:CanvasSizeBehavior.EnableSize="true" behavior:CanvasSizeBehavior.Size="{Binding canvasSize}">
-                                                <Polyline Stroke="Black" Points="{Binding airfoilCurve}"/>
-                                            </Canvas>
+                                            <custom:ObservableCanvas Size="{Binding canvasSize, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" Margin="20,0">
+                                                <Polyline Stroke="Black" Points="{Binding airfoilCurve, Mode=OneWay }"/>
+                                            </custom:ObservableCanvas>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Aqua"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                         </DataGrid>
                         <Button Content="Add" VerticalAlignment="Bottom" Width="60" HorizontalAlignment="Right" Command="{Binding addButtonDidClick}"/>
                         <Button Content="Remove" Margin="0,0,65,0" VerticalAlignment="Bottom" Width="60" HorizontalAlignment="Right"/>

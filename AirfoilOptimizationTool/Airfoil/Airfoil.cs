@@ -9,6 +9,7 @@ namespace AirfoilOptimizationTool.Airfoil
 {
     public class Airfoil
     {
+        private string _name;
         private PairedPoint[] _airfoilCurve;
         private Point[] _camberLine;
         private Point[] _thicknessDistribution;
@@ -22,6 +23,7 @@ namespace AirfoilOptimizationTool.Airfoil
         private AirfoilCharacteristics _airfoilCharacteristics;
 
         // Properties
+        public string name { get => _name; set => _name = value; }
         public double chord => _chord;
         public double maxCamber => _maxCamber;
         public double maxCamberLocation => _maxCamberLoc;
@@ -38,6 +40,7 @@ namespace AirfoilOptimizationTool.Airfoil
             _airfoilCurve = curve;
 
             calculateChord();
+            standardizeAirfoilCurve();
             calculateCamber();
             calculateThickness();
         }
@@ -46,6 +49,7 @@ namespace AirfoilOptimizationTool.Airfoil
             _airfoilCharacteristics = characteristics;
 
             calculateChord();
+            standardizeAirfoilCurve();
             calculateCamber();
             calculateThickness();
         }
@@ -92,17 +96,17 @@ namespace AirfoilOptimizationTool.Airfoil
         //
         // Standardize an Airfoil
         //
-        public static Airfoil standardize(Airfoil airfoil) {
+        private void standardizeAirfoilCurve() {
             List<PairedPoint> curve = new List<PairedPoint>();
-            foreach (var point in airfoil._airfoilCurve) {
+            foreach (var point in this._airfoilCurve) {
                 curve.Add(new PairedPoint(
-                    point.X / airfoil._chord, 
-                    point.Y1 / airfoil._chord,
-                    point.Y2 / airfoil._chord)
+                    point.X / this._chord, 
+                    point.Y1 / this._chord,
+                    point.Y2 / this._chord)
                 );
             }
 
-            return new Airfoil(curve.ToArray());
+            this._airfoilCurve = curve.ToArray();
         }
 
         //

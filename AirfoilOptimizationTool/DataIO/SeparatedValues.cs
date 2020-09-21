@@ -9,19 +9,28 @@ using System.Windows.Converters;
 
 namespace AirfoilOptimizationTool.DataIO {
     class SeparatedValues {
+        private string name;
         private char delimiter;
         private string[][] value;
 
-        private Logger logger;
+        public string valueName => name;
 
         public SeparatedValues(char delimiter) {
             this.delimiter = delimiter;
-
-            logger = Logger.getLogger(nameof(SeparatedValues));
         }
 
-        public bool openFromFile(string path) {
+        /// <summary>
+        /// Open a Separated Value file from path and than close the file.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="PathTooLongException"></exception>
+        /// <exception cref="DirectoryNotFoundException"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
+        /// <exception cref="FileNotFoundException"></exception>
+        public void openFromFile(string path) {
             try {
+                name = Path.GetFileNameWithoutExtension(path);
                 var lineText = File.ReadAllText(path).Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
                 List<string[]> tempValue = new List<string[]>();
@@ -30,21 +39,17 @@ namespace AirfoilOptimizationTool.DataIO {
                 }
                 value = tempValue.ToArray();
 
-                return true;
-
-            } catch (ArgumentNullException e) {
-                logger.error(e.Message);
-            } catch (PathTooLongException e) {
-                logger.error(e.Message);
-            } catch (DirectoryNotFoundException e) {
-                logger.error(e.Message);
-            } catch (UnauthorizedAccessException e) {
-                logger.error(e.Message);
-            } catch (FileNotFoundException e) {
-                logger.error(e.Message);
+            } catch (ArgumentNullException) {
+                throw;
+            } catch (PathTooLongException) {
+                throw;              
+            } catch (DirectoryNotFoundException) {
+                throw;
+            } catch (UnauthorizedAccessException) {
+                throw;
+            } catch (FileNotFoundException) {
+                throw;
             }
-
-            return false;
         }
 
         /// <summary>
@@ -63,7 +68,6 @@ namespace AirfoilOptimizationTool.DataIO {
                     }
                     catch (FormatException e) {
                         temp.Add(Int32.MaxValue);
-                        logger.error(e.Message);
                     }
                 }
 
@@ -88,7 +92,6 @@ namespace AirfoilOptimizationTool.DataIO {
                         temp.Add(System.Convert.ToDouble(v));
                     } catch (FormatException e) {
                         temp.Add(Double.NaN);
-                        logger.error(e.Message);
                     }
                 }
 
