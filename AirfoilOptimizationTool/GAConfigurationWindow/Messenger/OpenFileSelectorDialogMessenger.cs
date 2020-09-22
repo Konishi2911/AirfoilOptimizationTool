@@ -27,5 +27,10 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow.Messenger {
 
             return eventArgs.selectedPath;
         }
+
+        // Release all event handler
+        public void disconnect() {
+            OpenFileSelectorDialogEvent = null;
+        }
     }
 }

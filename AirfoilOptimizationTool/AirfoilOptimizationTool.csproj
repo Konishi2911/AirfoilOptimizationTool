@@ -74,13 +74,17 @@
     <Compile Include="CustomControlls\ObservableCanvas.cs" />
     <Compile Include="DataIO\AirfoilShapeImporter.cs" />
     <Compile Include="DataIO\SeparatedValues.cs" />
+    <Compile Include="GAConfigurationWindow\Actions\CloseDialogAction.cs" />
     <Compile Include="GAConfigurationWindow\Actions\OpenFileSelectorDialog.cs" />
+    <Compile Include="GAConfigurationWindow\AirfoilRepresentation\BasisAirfoilConfigManager.cs" />
     <Compile Include="GAConfigurationWindow\AirfoilRepresentation\BasisAirfoilItem.cs" />
+    <Compile Include="GAConfigurationWindow\EventTriggers\CloseDialogEventTrigger.cs" />
     <Compile Include="GAConfigurationWindow\EventTriggers\OpenFileSelectorDialogEvent.cs" />
     <Compile Include="GAConfigurationWindow\GAConfigurationWindow.xaml.cs">
       <DependentUpon>GAConfigurationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GAConfigurationWindow\GAConfigurationWindowViewModel.cs" />
+    <Compile Include="GAConfigurationWindow\Messenger\CloseDialogMessenger.cs" />
     <Compile Include="GAConfigurationWindow\Messenger\OpenFileSelectorDialogEventArgs.cs" />
     <Compile Include="GAConfigurationWindow\Messenger\OpenFileSelectorDialogMessenger.cs" />
     <Compile Include="GAProgress\GAProgressManager.cs" />

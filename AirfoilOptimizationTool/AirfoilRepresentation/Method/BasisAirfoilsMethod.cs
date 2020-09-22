@@ -10,6 +10,7 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
         private Airfoil.Airfoil[] _basisAirfoils;
 
         public int numberOfBasis => _basisAirfoils.Length;
+        public Airfoil.Airfoil[] basisAirfoils => _basisAirfoils;
 
         //
         // Constructors

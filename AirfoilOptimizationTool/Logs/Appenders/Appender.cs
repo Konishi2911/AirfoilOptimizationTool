@@ -21,7 +21,13 @@ namespace AirfoilOptimizationTool.Logs.Appenders {
         public delegate void LogReadyEventHandler(object sender, LogReadyEventArgs e);
 
 
-        public abstract void appendLog(LogItem log);
+        public Security logLevel { get; set; }
+        public void appendLog(LogItem log) {
+            if (log.security <= logLevel ) {
+                appendLogImprementation(log);
+            }
+        }
+        protected abstract void appendLogImprementation(LogItem log);
 
         public abstract void setFormat(IFormatter format);
 

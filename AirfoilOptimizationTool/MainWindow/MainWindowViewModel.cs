@@ -68,6 +68,7 @@ namespace AirfoilOptimizationTool
             //Setup Logger
             TextFieldAppender appender = new TextFieldAppender();
             appender.ReadyToLog += Appender_ReadyToLog;
+            appender.logLevel = Security.Info;
             appender.setFormat("[%d] [%p] : %m");
             Logger.getLogger("GAStandardLogger").addAppender(appender);
 

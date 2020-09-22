@@ -11,7 +11,6 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow.AirfoilRepresentation {
         private string airfoilName1;
 
         public delegate void BasisAirfoilCanvasSizeDidChangeEventHandler(in BasisAirfoilItem sender, EventArgs e);
-        public event BasisAirfoilCanvasSizeDidChangeEventHandler canvasSizeDidChange;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public BasisAirfoilItem() {
@@ -37,8 +36,16 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow.AirfoilRepresentation {
 
                 Logs.Logger.getLogger("GAStandardLogger").trace(airfoilName + " Canvas Width: " + (value.Width.ToString()));
 
-                BasisAirfoilItem basisAirfoilItem = this;
-                canvasSizeDidChange?.Invoke(in basisAirfoilItem, new EventArgs());
+
+                // Update Airfoil Preview Curve
+                var converter = new AirfoilPreview.AirfoilPreviewCurveConverter(this.airfoil, this.canvasSize);
+                var newCurve = converter.getDrawingOutlineCurve();
+
+                this.airfoilCurve = newCurve;
+                //
+
+
+                // notyfy Property did change
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(canvasSize)));
             }
         }

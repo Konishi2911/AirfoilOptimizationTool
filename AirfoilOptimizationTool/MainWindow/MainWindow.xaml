@@ -53,104 +53,104 @@
                 </Grid.ColumnDefinitions>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="0" Grid.Row="1">
                     <Canvas behavior:CanvasSizeBehavior.EnableSize="True"
-                           behavior:CanvasSizeBehavior.Size="{Binding parentsCanvasSize, Mode=OneWayToSource}">
+                           behavior:CanvasSizeBehavior.Size="{Binding parentsCanvasSize, Mode=OneWayToSource}" Margin="5,0">
                         <Polyline Stroke ="Black" StrokeThickness="1"  Points="{Binding drawingCurrentPopulationCurve[0], Mode=OneWay}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="1" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[1]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="2" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[2]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="3" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[3]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="4" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[4]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="5" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[5]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="6" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[6]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="7" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[7]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="8" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[8]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="9" Grid.Row="1">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCurrentPopulationCurve[9]}"/>
                     </Canvas>
                 </Border>
 
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="0" Grid.Row="3">
                     <Canvas behavior:CanvasSizeBehavior.EnableSize="True"
-                           behavior:CanvasSizeBehavior.Size="{Binding candidatesCanvasSize, Mode=OneWayToSource}">
+                           behavior:CanvasSizeBehavior.Size="{Binding candidatesCanvasSize, Mode=OneWayToSource}" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[0]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="1" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[1]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="2" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[2]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="3" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[3]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="4" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[4]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="5" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[5]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="6" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[6]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="7" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[7]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="8" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[8]}"/>
                     </Canvas>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="1,1,1,1" Grid.Column="9" Grid.Row="3">
-                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True">
+                    <Canvas behavior:CanvasSizeBehavior.EnableSize="True" Margin="5,0">
                         <Polyline Stroke ="Black"  Points="{Binding drawingCandidatesCurve[9]}"/>
                     </Canvas>
                 </Border>

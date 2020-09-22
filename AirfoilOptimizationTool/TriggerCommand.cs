@@ -10,19 +10,28 @@ namespace AirfoilOptimizationTool {
         Action callback;
         Func<bool> canExecute;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler canExecuteChanged;
 
         public TriggerCommand(Action callback, Func<bool> canExecute) {
             this.callback = callback;
             this.canExecute = canExecute;
         }
 
+
+        public event EventHandler CanExecuteChanged {
+            add => canExecuteChanged += value;
+            remove => canExecuteChanged -= value;
+        }
         public bool CanExecute(object parameter) {
             return canExecute();
         }
-
         public void Execute(object parameter) {
             callback();
+        }
+
+
+        public void notifyCanExecuteDidChange() {
+            canExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

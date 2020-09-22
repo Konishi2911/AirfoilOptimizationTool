@@ -6,12 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AirfoilOptimizationTool {
-    class OptimizationManager {
+    public class OptimizationManager {
         private AirfoilRepresentation.AirfoilRepresentationManager _airfoilRepManager;
+
+        public const string OptimizationLoggerName = "GAStandardLogger";
 
         private OptimizationManager() {
         }
 
         public static OptimizationManager instance { get; } = new OptimizationManager();
+
+        public AirfoilRepresentationManager representationManager { get; set; }
     }
 }

@@ -16,11 +16,20 @@
     <Window.DataContext>
         <local:GAConfigurationWindowViewModel/>
     </Window.DataContext>
+    
 
     <i:Interaction.Triggers>
+        <trigger:CloseDialogEventTrigger>
+            <actions:CloseDialogAction/>
+        </trigger:CloseDialogEventTrigger>
+        
         <trigger:OpenFileSelectorDialogEvent>
             <actions:OpenFileSelectorDialog/>
         </trigger:OpenFileSelectorDialogEvent>
+
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding closingWindow}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <Grid>
@@ -29,8 +38,10 @@
                 <Grid>
                     <Label Content="Airfoil Representation Method" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <ComboBox Margin="185,14,10,0" VerticalAlignment="Top" ItemsSource="{Binding airfoilRepresentationMethod}" SelectedValue="{Binding selectedRepresentationMethod}"/>
-                    <Grid Margin="10,41,10,10">
-                        <DataGrid Margin="0,0,0,25" AutoGenerateColumns="False" ItemsSource="{Binding basisAirfoilItems, Mode=OneWay}" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="80" EnableRowVirtualization="False">
+                    <Grid Margin="10,41,10,10" Visibility="{Binding BasisAirfoilConfiguratorVisibility, Mode=OneWay}">
+                        <DataGrid Margin="0,0,0,25" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" RowHeight="80" EnableRowVirtualization="False"
+                                  ItemsSource="{Binding basisAirfoilItems, Mode=OneWay}" 
+                                  SelectedIndex="{Binding selectedBasisAirfoilItemIndex, Mode=OneWayToSource}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn ClipboardContentBinding="{x:Null}" Header="Name" Binding="{Binding airfoilName, Mode=TwoWay}" Width="100" IsReadOnly="True"/>
                                 <DataGridTemplateColumn ClipboardContentBinding="{x:Null}" Header="Preview" Width="1*" IsReadOnly="True" CanUserReorder="False">
@@ -43,15 +54,6 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="Aqua"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Triggers>
@@ -61,13 +63,18 @@
                                                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}"/>
                                                 </Setter.Value>
                                             </Setter>
+                                            <Setter Property="BorderBrush">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveBorderColorKey}}"/>
+                                                </Setter.Value>
+                                            </Setter>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.CellStyle>
                         </DataGrid>
                         <Button Content="Add" VerticalAlignment="Bottom" Width="60" HorizontalAlignment="Right" Command="{Binding addButtonDidClick}"/>
-                        <Button Content="Remove" Margin="0,0,65,0" VerticalAlignment="Bottom" Width="60" HorizontalAlignment="Right"/>
+                        <Button Content="Remove" Margin="0,0,65,0" VerticalAlignment="Bottom" Width="60" HorizontalAlignment="Right" Command="{Binding removeButtonDidClick}"/>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -80,8 +87,8 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button Content="Cancel" HorizontalAlignment="Right" Margin="0,0,90,10" VerticalAlignment="Bottom" Width="75"/>
-        <Button Content="Apply" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75"/>
+        <Button Content="Cancel" HorizontalAlignment="Right" Margin="0,0,90,10" VerticalAlignment="Bottom" Width="75" Command="{Binding cancelButtonDidClick}"/>
+        <Button Content="Apply" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Command="{Binding applyButtonDidClick}"/>
         <Label Content="Genetic Algorithm Configuration" Margin="15,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="-1.816,0.5" Height="40" FontSize="20" FontFamily="Yu Gothic UI Semibold" FontWeight="Bold"/>
 
     </Grid>

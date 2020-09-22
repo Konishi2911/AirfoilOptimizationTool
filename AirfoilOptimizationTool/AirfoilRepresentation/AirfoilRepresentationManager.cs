@@ -1,16 +1,17 @@
-﻿using System;
+﻿using AirfoilOptimizationTool.AirfoilRepresentation.Method;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AirfoilOptimizationTool.AirfoilRepresentation {
-    class AirfoilRepresentationManager {
+    public class AirfoilRepresentationManager {
         private Method.IAirfoilRepresentationMethod representationMethod;
 
         private List<double[]> optimizingParameters;
 
-        AirfoilRepresentationManager(Method.IAirfoilRepresentationMethod method) {
+        public AirfoilRepresentationManager(Method.IAirfoilRepresentationMethod method) {
             representationMethod = method;
         }
 
@@ -35,5 +36,9 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation {
 
             return representationMethod.getAirfoil(optimizingParameters[index]);
         }
+
+        //
+        // Get Airfoil Representation Method
+        public IAirfoilRepresentationMethod airfoilRepresentationMethod => representationMethod;
     }
 }

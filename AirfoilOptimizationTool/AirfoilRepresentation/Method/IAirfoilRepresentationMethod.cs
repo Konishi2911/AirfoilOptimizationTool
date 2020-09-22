@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
-    interface IAirfoilRepresentationMethod {
+    public interface IAirfoilRepresentationMethod {
         public Airfoil.Airfoil getAirfoil(double[] weight);
     }
 }
