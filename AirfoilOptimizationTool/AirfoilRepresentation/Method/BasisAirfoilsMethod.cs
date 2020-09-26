@@ -25,6 +25,9 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
         }
 
 
+        public int numberOfParameters() {
+            return basisAirfoils.Length;
+        }
         public Airfoil.Airfoil getAirfoil(double[] weights) {
             if (_basisAirfoils == null) return null;
             if (_basisAirfoils.Length != weights.Length) return null;

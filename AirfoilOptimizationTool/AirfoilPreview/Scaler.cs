@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
+#nullable enable
+
 namespace AirfoilOptimizationTool.AirfoilPreview
 {
     public class Scaler

@@ -6,11 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+#nullable enable
+
 namespace AirfoilOptimizationTool.AirfoilPreview {
     class AirfoilPreviewCurveConverter {
-        Point[] outlineCurve;
-        Point[] leadingEdgeCircle;
-        Point[] camberCurve;
+        Point[]? outlineCurve;
+        Point[]? leadingEdgeCircle;
+        Point[]? camberCurve;
         Size drawingRegionSize;
 
         public AirfoilPreviewCurveConverter(Size previewRegionSize) {

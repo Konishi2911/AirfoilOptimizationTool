@@ -50,7 +50,7 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow {
             // Load Current Configuration 
 
             // Basis Airfoil Method ---------------------------------------------------- //
-            var basisAirfoilMethod = OptimizationManager.instance.representationManager?.airfoilRepresentationMethod as BasisAirfoilsMethod;
+            var basisAirfoilMethod = OptimizationManager.instance.representedAirfoilsManager?.airfoilRepresentationMethod as BasisAirfoilsMethod;
             if (basisAirfoilMethod != null) {
                 foreach (var airfoil in basisAirfoilMethod?.basisAirfoils) {
                     basisAirfoilItems.Add(new BasisAirfoilItem(airfoil));
@@ -122,7 +122,7 @@ namespace AirfoilOptimizationTool.GAConfigurationWindow {
 
             }
 
-            OptimizationManager.instance.representationManager = new AirfoilRepresentationManager(method);
+            OptimizationManager.instance.representedAirfoilsManager = new RepresentedAirfoilsManager(method);
 
             // Close Window
             CloseDialogMessenger.instance.requestClosingDialog();

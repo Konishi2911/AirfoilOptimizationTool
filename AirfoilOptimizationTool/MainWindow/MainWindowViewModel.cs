@@ -1,10 +1,12 @@
 ﻿using AirfoilOptimizationTool.Logs;
 using AirfoilOptimizationTool.Logs.Appenders;
+using AirfoilOptimizationTool.MainWindow;
 using AirfoilOptimizationTool.MainWindow.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -13,6 +15,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+
+#nullable enable
 
 namespace AirfoilOptimizationTool
 {
@@ -43,6 +47,10 @@ namespace AirfoilOptimizationTool
 
         private Size _detailCanvasSize;
 
+        // ## Parameters View
+        private ParametersTableGenerator _parametersTableGenerator;
+        private DataTable _parametersTable;
+
         // ## Log View
         private string _logMessage;
 
@@ -61,9 +69,11 @@ namespace AirfoilOptimizationTool
             _parentsCanvasSize = new Size();
             _candidatesCanvasSize = new Size();
 
-            // Instantiate Drawing Curve Collection
             _drawingCurrentPopulationCurves = new ObservableCollection<PointCollection>(new PointCollection[numberOfParentPreviewWindows]);
             _drawingCandidateCurves = new ObservableCollection<PointCollection>(new PointCollection[numberOfCandidatePreviewWindows]);
+
+            _parametersTableGenerator = new ParametersTableGenerator();
+            _parametersTable = new DataTable();
 
             //Setup Logger
             TextFieldAppender appender = new TextFieldAppender();
@@ -85,6 +95,7 @@ namespace AirfoilOptimizationTool
 
             // Register Callbacks to EventHandler
             CanvasSizeWasChanged += canvasSizeWasChanged;
+            _parametersTableGenerator.ParametersTableSourceDidUpdate += _parametersTableGenerator_ParametersTableSourceDidUpdate;
 
             updateAirfoilPreviews();
 
@@ -139,6 +150,20 @@ namespace AirfoilOptimizationTool
             private set {
                 _drawingCandidateCurves = value;
                 notifyPropertyDidChange(nameof(drawingCandidatesCurve));
+            }
+        }
+
+        //
+        // ## Optimization Parameters View
+
+
+        public DataTable optimizationParameters {
+            get {
+                return _parametersTable;
+            }
+            set {
+                _parametersTable = value;
+                notifyPropertyDidChange(nameof(optimizationParameters));
             }
         }
 
@@ -221,6 +246,22 @@ namespace AirfoilOptimizationTool
         // 
         private void canvasSizeWasChanged() {
             updateAirfoilPreviews();
+        }
+        
+        //
+        // Notify optimization paramters be changed.
+        //
+        private void optimizationParamtersBeChanged(object sender, NotifyCollectionChangedEventArgs e) {
+            var index = e.NewStartingIndex;
+            var item = (double[])e.NewItems[0];
+
+            OptimizationManager.instance.representedAirfoilsManager?.editParamter(index, item);
+        }
+
+        //
+        // Parameters Table Did update
+        private void _parametersTableGenerator_ParametersTableSourceDidUpdate(object sender, EventArgs e) {
+            optimizationParameters = _parametersTableGenerator.getParameterTable();
         }
 
 

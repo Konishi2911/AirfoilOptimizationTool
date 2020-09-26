@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>8.0</LangVersion>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -66,9 +67,10 @@
     </ApplicationDefinition>
     <Compile Include="AirfoilPreview\AirfoilPreviewCurveConverter.cs" />
     <Compile Include="AirfoilPreview\Scaler.cs" />
-    <Compile Include="AirfoilRepresentation\AirfoilRepresentationManager.cs" />
+    <Compile Include="AirfoilRepresentation\RepresentedAirfoilsManager.cs" />
     <Compile Include="AirfoilRepresentation\Method\BasisAirfoilsMethod.cs" />
     <Compile Include="AirfoilRepresentation\Method\IAirfoilRepresentationMethod.cs" />
+    <Compile Include="AirfoilRepresentation\RepresentedAirfoil.cs" />
     <Compile Include="Airfoil\PairedPoint.cs" />
     <Compile Include="Airfoil\PointExtensions.cs" />
     <Compile Include="CustomControlls\ObservableCanvas.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="General\Behaviors\CanvasSizeBehavior.cs" />
     <Compile Include="MainWindow\EventTrigger\GAConfigurationWindowTrigger.cs" />
     <Compile Include="MainWindow\Messenger\GAConfigurationMessenger.cs" />
+    <Compile Include="MainWindow\ParametersTableGenerator.cs" />
     <Compile Include="OptimizationManager.cs" />
     <Compile Include="TriggerCommand.cs" />
     <Compile Include="ViewModelBase.cs" />
