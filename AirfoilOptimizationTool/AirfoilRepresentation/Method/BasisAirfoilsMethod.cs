@@ -14,6 +14,17 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
         public int numberOfBasis => _basisAirfoils.Length;
         public Airfoil.Airfoil[] basisAirfoils => _basisAirfoils;
 
+        public string[] captionOfParameter {
+            get {
+                var tempCaption = new List<string>();
+                foreach (var basisAirfoil in _basisAirfoils) {
+                    tempCaption.Add(basisAirfoil.name);
+                }
+
+                return tempCaption.ToArray();
+            }
+        }
+
         //
         // Constructors
         //
@@ -22,7 +33,9 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
 
             foreach (var airfoil in basis) {
                 var importer = new AirfoilShapeImporter(PairedPoint.convertToPointArray(airfoil.airfoilCurve, PairedPoint.Direction.FromUpperTrailing));
-                airfoils.Add(importer.getAirfoil(numberOfPoints));
+                var tempAirfoil = importer.getAirfoil(numberOfPoints);
+                tempAirfoil.name = airfoil.name;
+                airfoils.Add(tempAirfoil);
             }
 
             _basisAirfoils = airfoils.ToArray();
@@ -34,13 +47,15 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
         }
         public Airfoil.Airfoil getAirfoil(double[] weights) {
             if (_basisAirfoils == null) return null;
+            if (_basisAirfoils.Length == 0) return null;
             if (_basisAirfoils.Length != weights.Length) return null;
 
             List<Airfoil.PairedPoint> newCurve = new List<Airfoil.PairedPoint>();
             for (var i = 0; i < numberOfPoints; ++i) {
                 double tempX = 0.0, tempY1 = 0.0, tempY2 = 0.0;
+
+                tempX = _basisAirfoils[0].airfoilCurve[i].X;
                 for (var j = 0; j < weights.Length; ++j) {
-                    tempX += _basisAirfoils[j].airfoilCurve[i].X;
                     tempY1 += _basisAirfoils[j].airfoilCurve[i].Y1 * weights[j];
                     tempY2 += _basisAirfoils[j].airfoilCurve[i].Y2 * weights[j];
                 }

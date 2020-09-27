@@ -50,8 +50,8 @@ namespace AirfoilOptimizationTool.DataIO {
             var upperInterpolator = new LinearInterpolator(upperList.ToArray());
             var lowerInterpolator = new LinearInterpolator(lowerList.ToArray());
 
-            var upperPoints = upperInterpolator.curve(N);
-            var lowerPoints = lowerInterpolator.curve(N);
+            var upperPoints = upperInterpolator.curveByConstantX(N);
+            var lowerPoints = lowerInterpolator.curveByConstantX(N);
             var points = new List<PairedPoint>();
             for (var i = 0; i < N; ++i) {
                 points.Add(new PairedPoint(upperPoints[i].X, upperPoints[i].Y, lowerPoints[i].Y));

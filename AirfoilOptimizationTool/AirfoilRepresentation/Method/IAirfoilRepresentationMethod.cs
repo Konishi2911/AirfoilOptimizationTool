@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
     public interface IAirfoilRepresentationMethod {
         public int numberOfParameters();
+        public string[] captionOfParameter { get; }
         public Airfoil.Airfoil getAirfoil(double[] weight);
     }
 }

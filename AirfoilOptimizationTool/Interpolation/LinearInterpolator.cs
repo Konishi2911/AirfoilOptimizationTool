@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AirfoilOptimizationTool.Airfoil;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -21,6 +22,29 @@ namespace AirfoilOptimizationTool.Interpolation
 
             for (var i = 0; i < N; ++i) {
                 temp_p.Add(interpolation((double)i / (double)(N - 1)));
+            }
+            return temp_p.ToArray();
+        }
+
+        public Point[] curveByConstantX(int N) {
+            var temp_p = new List<Point>();
+            var width = ((Point)_points.max(PointExtensions.Axis.X)).X - ((Point)_points.min(PointExtensions.Axis.X)).X;
+
+            for (var i = 0; i < N; ++i) {
+                //var x = width * (double)i / (double)(N - 1) + _points[0].X;
+                var x = width * (1 - Math.Cos(i / (double)(N - 1) * 0.5 * Math.PI)) + _points[0].X;
+                var y = 0.0;
+                if (i == N - 1) {
+                    y = _points[_points.Length - 1].Y;
+                } 
+                else {
+                    for (var j = 0; j < _points.Length - 1; ++j) {
+                        if (!(_points[j].X <= x && x < _points[j + 1].X)) continue;
+                        y = _points[j].Y + (x - _points[j].X) * (_points[j + 1].Y - _points[j].Y) / (_points[j + 1].X - _points[j].X);
+                        break;
+                    }
+                }
+                temp_p.Add(new Point(x, y));
             }
             return temp_p.ToArray();
         }

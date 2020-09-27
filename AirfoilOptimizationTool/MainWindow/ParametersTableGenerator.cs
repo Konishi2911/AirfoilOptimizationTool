@@ -23,9 +23,10 @@ namespace AirfoilOptimizationTool.MainWindow {
             var tempParamtersTable = new DataTable();
 
             // Generate columns
-            var numberOfParameters = OptimizationManager.instance.representedAirfoilsManager?.airfoilRepresentationMethod?.numberOfParameters() ?? 0;
+            var representationMethod = OptimizationManager.instance.representedAirfoilsManager?.airfoilRepresentationMethod;
+            var numberOfParameters = representationMethod?.numberOfParameters() ?? 0;
             for (var i = 0; i < numberOfParameters; ++i) {
-                tempParamtersTable.Columns.Add("Column " + i.ToString());
+                tempParamtersTable.Columns.Add(representationMethod?.captionOfParameter[i]);
             }
 
             // Generate rows

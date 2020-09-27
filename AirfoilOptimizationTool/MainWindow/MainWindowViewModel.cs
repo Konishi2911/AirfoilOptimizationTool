@@ -256,32 +256,5 @@ namespace AirfoilOptimizationTool
                 drawingCurrentPopulationCurve = tempCollection;
             }
         }
-
-        //
-        // Update Airfoil Curves
-        // This function will be called when the preview windows that display airfoils will be updated.
-        //
-        private static ObservableCollection<Point[]>? updateCurves(Airfoil.Airfoil[] airfoils) {
-            if (airfoils == null) return null;
-
-            ObservableCollection<Point[]> temp_points = new ObservableCollection<Point[]>();
-            foreach (var airfoil in airfoils) {
-                Interpolation.IInterpolator interpolator = new Interpolation.LinearInterpolator(
-                    Airfoil.PairedPoint.convertToPointArray(airfoil.airfoilCurve, Airfoil.PairedPoint.Direction.FromUpperTrailing)
-                );
-                temp_points.Add(interpolator.curve(airfoilPreviewResolutions));
-            }
-            return temp_points;
-        }
-
-        //
-        // Make airfoil Curve Points on the Display Coordinate
-        //
-        private static PointCollection? makeDrawingCurve(Point[] curve, Size canvasSize) {
-            if (curve == null) return null;
-
-            AirfoilPreview.Scaler pointScaler = new AirfoilPreview.Scaler(canvasSize, curve);
-            return new PointCollection(pointScaler.adjustScale(curve, true));
-        }
     }
 }
