@@ -1,4 +1,5 @@
-﻿using AirfoilOptimizationTool.Logs;
+﻿using AirfoilOptimizationTool.AirfoilPreview;
+using AirfoilOptimizationTool.Logs;
 using AirfoilOptimizationTool.Logs.Appenders;
 using AirfoilOptimizationTool.MainWindow;
 using AirfoilOptimizationTool.MainWindow.Messenger;
@@ -29,8 +30,8 @@ namespace AirfoilOptimizationTool
         // ## Airfoil Preview View
         private Airfoil.Airfoil[] _currentPopulation;
         private Airfoil.Airfoil[] _candidates;
-        private Point[][] _currentPopulationCurves;
-        private Point[][] _candidatesCurves;
+        private ObservableCollection<PointCollection> _currentPopulationCurves;
+        private ObservableCollection<PointCollection> _candidatesCurves;
         private ObservableCollection<PointCollection> _drawingCurrentPopulationCurves;
         private ObservableCollection<PointCollection> _drawingCandidateCurves;
         private int displayingRangeStartsIndexOfParents;
@@ -65,7 +66,7 @@ namespace AirfoilOptimizationTool
             displayingRangeStartsIndexOfParents = 0;
             displayinhRangeStartsIndexOfCandidates = 0;
 
-            // Instantiate CanvasSizes
+            // Instantiate
             _parentsCanvasSize = new Size();
             _candidatesCanvasSize = new Size();
 
@@ -83,14 +84,7 @@ namespace AirfoilOptimizationTool
             Logger.getLogger("GAStandardLogger").addAppender(appender);
 
             // Generate Mock for debugging --------------------------------------------- //
-            _currentPopulationCurves = new Point[numberOfParentPreviewWindows][];
-            _currentPopulationCurves[0] = new Point[] {
-                new Point(1, 0),
-                new Point(0.3, 0.05),
-                new Point(0, 0),
-                new Point(0.5, 0.01),
-                new Point(1, 0)
-            };
+
             // ------------------------------------------------------------------------- //
 
             // Register Callbacks to EventHandler
@@ -105,34 +99,6 @@ namespace AirfoilOptimizationTool
         private void Appender_ReadyToLog(object sender, Appender.LogReadyEventArgs e) {
             logMessage += e.logMessage;
         }
-
-        #region Properties and Setters
-        //
-        // Airfoil Preview Curves ==================================== //
-        //
-        public Point[][] currentPopulationCurves {
-            get => _currentPopulationCurves;
-            private set {
-                _currentPopulationCurves = value;
-                notifyPropertyDidChange(nameof(currentPopulationCurves));
-            }
-        }
-        public Point[][] candidatesCurves {
-            get => _candidatesCurves;
-            private set {
-                _candidatesCurves = value;
-                notifyPropertyDidChange(nameof(candidatesCurves));
-            }
-        }
-        public void setNewPopulation(Airfoil.Airfoil[] cp) {
-            _currentPopulation = cp;
-            _currentPopulationCurves = MainWindowViewModel.updateCurves(_currentPopulation);
-        }
-        public void setNewCandidates(Airfoil.Airfoil[] cp) {
-            _candidates = cp;
-            _candidatesCurves = MainWindowViewModel.updateCurves(_candidates);
-        }
-        #endregion
 
         //
         // Binding Properties =========================================== //
@@ -238,6 +204,7 @@ namespace AirfoilOptimizationTool
             }
         }
 
+        #region Callbacks
         //
         // Callbacks ========================================== //
 
@@ -248,21 +215,21 @@ namespace AirfoilOptimizationTool
             updateAirfoilPreviews();
         }
         
-        //
-        // Notify optimization paramters be changed.
-        //
-        private void optimizationParamtersBeChanged(object sender, NotifyCollectionChangedEventArgs e) {
-            var index = e.NewStartingIndex;
-            var item = (double[])e.NewItems[0];
-
-            OptimizationManager.instance.representedAirfoilsManager?.editParamter(index, item);
-        }
 
         //
         // Parameters Table Did update
         private void _parametersTableGenerator_ParametersTableSourceDidUpdate(object sender, EventArgs e) {
-            optimizationParameters = _parametersTableGenerator.getParameterTable();
+
+            // Update Parameters TableView
+            if (!((ParametersTableGenerator)sender).isUnderProcessing) {
+                optimizationParameters = _parametersTableGenerator.getParameterTable();
+            }
+
+            // Update Airfoils Curve 
+            updateAirfoilPreviews();
         }
+
+        #endregion
 
 
         //
@@ -272,57 +239,39 @@ namespace AirfoilOptimizationTool
         // Preview Updater
         //
         private void updateAirfoilPreviews() {
-            List<PointCollection> temp_p = new List<PointCollection>();
-            List<PointCollection> temp_c = new List<PointCollection>();
-
-            // Generate Points Drawing on each Canvas
-            if (currentPopulationCurves != null) {
-                for (var i = 0; i < currentPopulationCurves.Length; ++i) {
-                    var dcp = makeDrawingCurve(currentPopulationCurves?[i], _parentsCanvasSize);
-                    if (dcp != null) temp_p.Add(dcp);
-                }
-            }
-            if (candidatesCurves != null) {
-                for (var i = 0; i < candidatesCurves.Length; ++i) {
-                    var dcc = makeDrawingCurve(candidatesCurves?[i], _candidatesCanvasSize);
-                    if (dcc != null) temp_c.Add(dcc);
-                }
-            }
-
-            // Update Drawing Curve Points
-            //
             // Parents
-            ObservableCollection<PointCollection> tempDrawingP = new ObservableCollection<PointCollection>();
-            for (int i = 0; i < numberOfParentPreviewWindows; ++i) {
-                if (i + displayingRangeStartsIndexOfParents < temp_p.Count) 
-                    tempDrawingP.Add(temp_p[i + displayinhRangeStartsIndexOfCandidates]);
-                else tempDrawingP.Add(new PointCollection());
+            _currentPopulationCurves?.Clear();
+            var manager = OptimizationManager.instance.representedAirfoilsManager;
+            if (manager != null) {
+
+                var tempCollection = new ObservableCollection<PointCollection>();
+                foreach (var airfoil in manager!.getAllAirfoils()) {
+
+                    // configure Converter
+                    var converter = new AirfoilPreviewCurveConverter(airfoil)!;
+                    converter.setPreviewRegionSize(parentsCanvasSize);
+
+                    tempCollection.Add(converter.getDrawingOutlineCurve());
+                }
+                drawingCurrentPopulationCurve = tempCollection;
             }
-            drawingCurrentPopulationCurve = tempDrawingP;
-            //
-            // Candidates
-            ObservableCollection<PointCollection> tempDrawingC = new ObservableCollection<PointCollection>();
-            for (int i = 0; i < numberOfCandidatePreviewWindows; ++i) {
-                if (i + displayinhRangeStartsIndexOfCandidates < temp_c.Count) 
-                    tempDrawingC.Add(temp_c[i + displayinhRangeStartsIndexOfCandidates]);
-                else tempDrawingC.Add(new PointCollection());
-            }
-            drawingCandidatesCurve = tempDrawingC;
         }
 
         //
         // Update Airfoil Curves
         // This function will be called when the preview windows that display airfoils will be updated.
         //
-        private static Point[][] updateCurves(Airfoil.Airfoil[] airfoils) {
-            List<Point[]> temp_points = new List<Point[]>();
+        private static ObservableCollection<Point[]>? updateCurves(Airfoil.Airfoil[] airfoils) {
+            if (airfoils == null) return null;
+
+            ObservableCollection<Point[]> temp_points = new ObservableCollection<Point[]>();
             foreach (var airfoil in airfoils) {
                 Interpolation.IInterpolator interpolator = new Interpolation.LinearInterpolator(
                     Airfoil.PairedPoint.convertToPointArray(airfoil.airfoilCurve, Airfoil.PairedPoint.Direction.FromUpperTrailing)
                 );
                 temp_points.Add(interpolator.curve(airfoilPreviewResolutions));
             }
-            return temp_points.ToArray();
+            return temp_points;
         }
 
         //

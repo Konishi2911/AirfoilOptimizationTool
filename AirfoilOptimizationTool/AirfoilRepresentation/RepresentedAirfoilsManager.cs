@@ -11,7 +11,8 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation {
 
         private RepresentedAirfoil[] airfoils;
 
-        public event EventHandler optimizationParametersDidChange;
+        public event EventHandler optimizationParametersDidChangeByModel;
+        public event EventHandler optimizationParametersDidEditByView;
 
         public double[][] optimizationParameters { 
             get {
@@ -47,7 +48,7 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation {
             }
             airfoils = tempAirfoils;
 
-            optimizationParametersDidChange?.Invoke(this, EventArgs.Empty);
+            optimizationParametersDidChangeByModel?.Invoke(this, EventArgs.Empty);
         }
 
 
@@ -68,6 +69,8 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation {
             catch (IndexOutOfRangeException) {
                 throw;
             }
+
+            optimizationParametersDidChangeByModel?.Invoke(this, EventArgs.Empty);
         }
 
         //

@@ -12,6 +12,8 @@ namespace AirfoilOptimizationTool.MainWindow {
 
         public event EventHandler ParametersTableSourceDidUpdate;
 
+        public bool isUnderProcessing { get; private set; }
+
         public ParametersTableGenerator() {
             OptimizationManager.instance.optimizationParamtersDidChange += Instance_optimizationParamtersDidChange;
             OptimizationManager.instance.representedAirfoilsMethodBeAvailable += Instance_representedAirfoilsMethodBeAvailable;
@@ -52,11 +54,22 @@ namespace AirfoilOptimizationTool.MainWindow {
             var changedRowItems = e.Row.ItemArray;
             var changedValuesList = new List<double>();
 
+            isUnderProcessing = true;
+
             // make changed values list
             try {
                 foreach (var item in changedRowItems) {
                     changedValuesList.Add(Convert.ToDouble(item));
                 }
+
+                // Get airfoil manager
+                var airfoilManager = OptimizationManager.instance.representedAirfoilsManager;
+
+                // get changed Index
+                var changedIndex = parametersTable.Rows.IndexOf(e.Row);
+
+                // edit airfoil
+                airfoilManager.editParamter(changedIndex, changedValuesList.ToArray());
             }
             catch (FormatException ex) {
                 Logger.getLogger(OptimizationManager.OptimizationLoggerName).warn(ex.Message);
@@ -67,30 +80,22 @@ namespace AirfoilOptimizationTool.MainWindow {
             catch (OverflowException ex) {
                 Logger.getLogger(OptimizationManager.OptimizationLoggerName).warn(ex.Message);
             }
-
-            // Get airfoil manager
-            var airfoilManager = OptimizationManager.instance.representedAirfoilsManager;
-
-            // get changed Index
-            var changedIndex = parametersTable.Rows.IndexOf(e.Row);
-
-            // edit airfoil
-            try {
-                airfoilManager.editParamter(changedIndex, changedValuesList.ToArray());
-            }
             catch (ArgumentException ex) {
                 Logger.getLogger(OptimizationManager.OptimizationLoggerName).warn(ex.Message);
             }
             catch (IndexOutOfRangeException ex) {
                 Logger.getLogger(OptimizationManager.OptimizationLoggerName).warn(ex.Message);
             }
+            finally {
+                isUnderProcessing = false;
+            } 
         }
 
         private void Instance_optimizationParamtersDidChange(object sender, EventArgs e) {
-            ParametersTableSourceDidUpdate?.Invoke(sender, e);
+            ParametersTableSourceDidUpdate?.Invoke(this, e);
         }
         private void Instance_representedAirfoilsMethodBeAvailable(object sender, EventArgs e) {
-            ParametersTableSourceDidUpdate?.Invoke(sender, e);
+            ParametersTableSourceDidUpdate?.Invoke(this, e);
         }
     }
 }

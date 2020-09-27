@@ -26,7 +26,7 @@ namespace AirfoilOptimizationTool {
                 _airfoilRepManager = value;
                 
                 if (_airfoilRepManager != null) {
-                    _airfoilRepManager.optimizationParametersDidChange += _airfoilRepManager_optimizationParametersDidChange;
+                    _airfoilRepManager.optimizationParametersDidChangeByModel += _airfoilRepManager_optimizationParametersDidChange;
 
                     representedAirfoilsMethodDidSet?.Invoke(this, EventArgs.Empty);
                 }
@@ -54,7 +54,7 @@ namespace AirfoilOptimizationTool {
             optimizationParamtersDidChange?.Invoke(sender, e);
         }
         private void OptimizationManager_representedAirfoilsMethodDidSet(object sender, EventArgs e) {
-            _airfoilRepManager.setNumberOfAirfoils(_gaProgressManager.populationSize);
+            _airfoilRepManager?.setNumberOfAirfoils(_gaProgressManager.populationSize);
 
             representedAirfoilsMethodBeAvailable?.Invoke(sender, e);
         }

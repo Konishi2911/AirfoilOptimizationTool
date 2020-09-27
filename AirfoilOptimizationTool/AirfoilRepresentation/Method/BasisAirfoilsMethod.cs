@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AirfoilOptimizationTool.Airfoil;
+using AirfoilOptimizationTool.DataIO;
 
 namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
     class BasisAirfoilsMethod : IAirfoilRepresentationMethod {
-        private int numberOfPoints;
+        private int numberOfPoints = 200;
         private Airfoil.Airfoil[] _basisAirfoils;
 
         public int numberOfBasis => _basisAirfoils.Length;
@@ -17,8 +19,10 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
         //
         public BasisAirfoilsMethod(Airfoil.Airfoil[] basis) {
             List<Airfoil.Airfoil> airfoils = new List<Airfoil.Airfoil>();
+
             foreach (var airfoil in basis) {
-                airfoils.Add(airfoil);
+                var importer = new AirfoilShapeImporter(PairedPoint.convertToPointArray(airfoil.airfoilCurve, PairedPoint.Direction.FromUpperTrailing));
+                airfoils.Add(importer.getAirfoil(numberOfPoints));
             }
 
             _basisAirfoils = airfoils.ToArray();
@@ -36,7 +40,7 @@ namespace AirfoilOptimizationTool.AirfoilRepresentation.Method {
             for (var i = 0; i < numberOfPoints; ++i) {
                 double tempX = 0.0, tempY1 = 0.0, tempY2 = 0.0;
                 for (var j = 0; j < weights.Length; ++j) {
-                    tempX += _basisAirfoils[j].airfoilCurve[i].X * weights[j];
+                    tempX += _basisAirfoils[j].airfoilCurve[i].X;
                     tempY1 += _basisAirfoils[j].airfoilCurve[i].Y1 * weights[j];
                     tempY2 += _basisAirfoils[j].airfoilCurve[i].Y2 * weights[j];
                 }
